@@ -1,0 +1,342 @@
+[
+  {
+    "id": "91011",
+    "name": "伊是名",
+    "name_kana": "イゼナ",
+    "lat": 26.9483,
+    "lon": 127.94,
+    "alt": 14,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "91021",
+    "name": "奥",
+    "name_kana": "オク",
+    "lat": 26.835,
+    "lon": 128.2717,
+    "alt": 232,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "91046",
+    "name": "国頭",
+    "name_kana": "クニガミ",
+    "lat": 26.7283,
+    "lon": 128.1783,
+    "alt": 8,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "91066",
+    "name": "本部",
+    "name_kana": "モトブ",
+    "lat": 26.685,
+    "lon": 127.8983,
+    "alt": 25,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "91081",
+    "name": "東",
+    "name_kana": "ヒガシ",
+    "lat": 26.6317,
+    "lon": 128.1533,
+    "alt": 24,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "91096",
+    "name": "粟国",
+    "name_kana": "アグニ",
+    "lat": 26.5917,
+    "lon": 127.2383,
+    "alt": 14,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "91107",
+    "name": "名護",
+    "name_kana": "ナゴ",
+    "lat": 26.5933,
+    "lon": 127.965,
+    "alt": 6,
+    "type": "B",
+    "has_temp": true
+  },
+  {
+    "id": "91121",
+    "name": "読谷",
+    "name_kana": "ヨミタン",
+    "lat": 26.4067,
+    "lon": 127.7333,
+    "alt": 90,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "91141",
+    "name": "北原",
+    "name_kana": "キタハラ：久米島空港",
+    "lat": 26.3633,
+    "lon": 126.7133,
+    "alt": 7,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "91146",
+    "name": "久米島",
+    "name_kana": "クメジマ",
+    "lat": 26.3367,
+    "lon": 126.8033,
+    "alt": 5,
+    "type": "B",
+    "has_temp": true
+  },
+  {
+    "id": "91151",
+    "name": "渡名喜",
+    "name_kana": "トナキ",
+    "lat": 26.3733,
+    "lon": 127.1417,
+    "alt": 7,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "91161",
+    "name": "胡屋",
+    "name_kana": "ゴヤ",
+    "lat": 26.3267,
+    "lon": 127.8033,
+    "alt": 105,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "91166",
+    "name": "宮城島",
+    "name_kana": "ミヤギジマ",
+    "lat": 26.3633,
+    "lon": 127.9717,
+    "alt": 100,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "91181",
+    "name": "渡嘉敷",
+    "name_kana": "トカシキ",
+    "lat": 26.21,
+    "lon": 127.3633,
+    "alt": 220,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "91197",
+    "name": "那覇",
+    "name_kana": "ナハ",
+    "lat": 26.2067,
+    "lon": 127.6867,
+    "alt": 28,
+    "type": "A",
+    "has_temp": true
+  },
+  {
+    "id": "91236",
+    "name": "安次嶺",
+    "name_kana": "アシミネ：那覇空港",
+    "lat": 26.1933,
+    "lon": 127.6383,
+    "alt": 3,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "91241",
+    "name": "糸数",
+    "name_kana": "イトカズ",
+    "lat": 26.1533,
+    "lon": 127.765,
+    "alt": 186,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "92006",
+    "name": "北大東",
+    "name_kana": "キタダイトウ：北大東空港",
+    "lat": 25.9433,
+    "lon": 131.3267,
+    "alt": 22,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "92011",
+    "name": "南大東",
+    "name_kana": "ミナミダイトウ",
+    "lat": 25.8283,
+    "lon": 131.2283,
+    "alt": 15,
+    "type": "A",
+    "has_temp": true
+  },
+  {
+    "id": "92012",
+    "name": "旧東",
+    "name_kana": "キュウトウ：南大東空港",
+    "lat": 25.8467,
+    "lon": 131.2633,
+    "alt": 48,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "93012",
+    "name": "下地島",
+    "name_kana": "シモジシマ：下地島空港",
+    "lat": 24.8267,
+    "lon": 125.1433,
+    "alt": 8,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "93041",
+    "name": "宮古島",
+    "name_kana": "ミヤコジマ",
+    "lat": 24.7933,
+    "lon": 125.2783,
+    "alt": 39,
+    "type": "A",
+    "has_temp": true
+  },
+  {
+    "id": "93042",
+    "name": "鏡原",
+    "name_kana": "カガミハラ：宮古空港",
+    "lat": 24.7817,
+    "lon": 125.295,
+    "alt": 43,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "93051",
+    "name": "城辺",
+    "name_kana": "グスクベ",
+    "lat": 24.7433,
+    "lon": 125.41,
+    "alt": 55,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "93062",
+    "name": "仲筋",
+    "name_kana": "ナカスジ：多良間空港",
+    "lat": 24.6533,
+    "lon": 124.675,
+    "alt": 10,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "94001",
+    "name": "伊原間",
+    "name_kana": "イバルマ",
+    "lat": 24.5067,
+    "lon": 124.28,
+    "alt": 11,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "94011",
+    "name": "所野",
+    "name_kana": "トコロノ：与那国空港",
+    "lat": 24.4667,
+    "lon": 122.9783,
+    "alt": 15,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "94017",
+    "name": "与那国島",
+    "name_kana": "ヨナグニジマ",
+    "lat": 24.4667,
+    "lon": 123.01,
+    "alt": 30,
+    "type": "B",
+    "has_temp": true
+  },
+  {
+    "id": "94036",
+    "name": "川平",
+    "name_kana": "カビラ",
+    "lat": 24.4667,
+    "lon": 124.14,
+    "alt": 7,
+    "type": "C",
+    "has_temp": false
+  },
+  {
+    "id": "94062",
+    "name": "西表島",
+    "name_kana": "イリオモテジマ",
+    "lat": 24.4267,
+    "lon": 123.765,
+    "alt": 10,
+    "type": "B",
+    "has_temp": true
+  },
+  {
+    "id": "94081",
+    "name": "石垣島",
+    "name_kana": "イシガキジマ",
+    "lat": 24.3367,
+    "lon": 124.1633,
+    "alt": 6,
+    "type": "A",
+    "has_temp": true
+  },
+  {
+    "id": "94086",
+    "name": "盛山",
+    "name_kana": "モリヤマ：石垣空港",
+    "lat": 24.395,
+    "lon": 124.245,
+    "alt": 31,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "94101",
+    "name": "大原",
+    "name_kana": "オオハラ",
+    "lat": 24.265,
+    "lon": 123.8717,
+    "alt": 33,
+    "type": "C",
+    "has_temp": true
+  },
+  {
+    "id": "94116",
+    "name": "波照間",
+    "name_kana": "ハテルマ",
+    "lat": 24.055,
+    "lon": 123.7667,
+    "alt": 38,
+    "type": "C",
+    "has_temp": true
+  }
+]

@@ -71,6 +71,35 @@ for sid, v in tbl.items():
 
 ---
 
+### okinawa_stations.json
+沖縄県のアメダス観測地点リスト。`amedastable.json` から生成した沖縄県分（観測点番号 91000〜94999）の抜粋。34地点。
+
+| フィールド | 内容 |
+|-----------|------|
+| `id` | アメダス地点ID（文字列） |
+| `name` | 地点名（漢字） |
+| `name_kana` | 地点名（カナ） |
+| `lat` | 緯度（十進法） |
+| `lon` | 経度（十進法） |
+| `alt` | 標高（m） |
+| `type` | 観測種別（`A`=気象官署, `B`=4要素, `C`=1要素） |
+| `has_temp` | 気温観測あり（`true`=25地点, `false`=9地点） |
+
+**使い方例:**
+```python
+import json
+with open('/Users/masahiro/projects/common/okinawa_stations.json') as f:
+    stations = json.load(f)
+
+# 気温観測あり地点のIDリスト
+temp_ids = [s['id'] for s in stations if s['has_temp']]
+
+# IDから地点名を引く辞書
+id_to_name = {s['id']: s['name'] for s in stations}
+```
+
+---
+
 ### jma_api_spec.md
 気象庁 bosai API 仕様まとめ。Qiita記事と jma_mcp 実装・動作確認による知見を統合した仕様書。
 
