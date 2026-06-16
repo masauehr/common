@@ -119,7 +119,9 @@ id_to_name = {s['id']: s['name'] for s in stations}
 
 #### AMD_Tools4.py
 
-オリジナルに対してエラー対応の独自修正を加えたもの。修正内容の詳細記録なし。
+オリジナルに対して以下の独自修正を加えたもの。
+
+- `colorbar` 警告修正（別 Figure への追加を `ScalarMappable` で回避）
 
 #### AMD_Tools4_ue3.py — uehara 独自拡張版（推奨）
 
