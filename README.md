@@ -160,7 +160,7 @@ MacのlaunchdによるmacOS自動実行ジョブ一覧（2026-06-26 現在）。
 ```
 6:00  nouken      農研機構 GSR グラフ生成 → GitHub push
 6:10  okiden      沖縄電力 日次CSV取得・グラフ更新 → GitHub push
-6:30  ml_forecast 発電量予測（AMD気象データ + RF モデル）→ README更新 → GitHub push
+6:30  ml_forecast 発電量予測（AMGSDS気象データ + RF モデル）→ README更新 → GitHub push
 ```
 
 ### ジョブ一覧
@@ -169,7 +169,7 @@ MacのlaunchdによるmacOS自動実行ジョブ一覧（2026-06-26 現在）。
 |------|---------|-----------|------|------|
 | **6:00** | nouken | `~/projects/nouken/` | 農研機構メッシュ農業気象データからGSR（全天日射量）・SSD（日照時間）グラフを毎日生成しGitHub push。リトライ: 6:30, 7:00 | `nouken/nouken_launchd.log` |
 | **6:10** | okiden | `~/projects/okiden/` | 沖縄電力の30分値CSVをダウンロードして日次グラフ・月次レポートを自動生成・push。月次は15日以降に確定データ公開を確認してから実行 | `okiden/okiden_launchd.log` |
-| **6:30** | ml_forecast | `~/projects/ml_forecast/` | AMD気象予報値（GSR・SSD・気温）を取得しRandomForestモデルで当日〜4日先の太陽光発電量を予測。README・検証グラフ自動更新 → GitHub push。noukenグラフ（6:00完了）をREADMEに取り込む | `ml_forecast/hatuden_launchd.log` |
+| **6:30** | ml_forecast | `~/projects/ml_forecast/` | AMGSDS気象予報値（GSR・SSD・気温）を取得しRandomForestモデルで当日〜4日先の太陽光発電量を予測。README・検証グラフ自動更新 → GitHub push。noukenグラフ（6:00完了）をREADMEに取り込む | `ml_forecast/hatuden_launchd.log` |
 | 6:30内 | hatuden.deploy | `~/projects/ml_forecast_pages/` | ml_forecast の GitHub push 完了後、`daily_forecast.py` 内の `deploy_to_xrea()` として自動実行。xrea（uehr.net/ml_forecast/）にFTPデプロイ。launchd ジョブは廃止済み | `ml_forecast/hatuden_launchd.log` |
 
 ### 設定ファイル
