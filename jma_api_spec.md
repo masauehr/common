@@ -7,6 +7,13 @@
 
 ---
 
+> ⚠️ **2026-05-28 の防災気象情報の新体系（警戒レベル中心）への移行で、警報・早期注意情報・気象情報・台風情報の配信先と形式が変わった**（第4・5・6・8章を更新済み）。
+> 旧パスは削除されず **5/28（台風は 5/27）のまま更新されない**ため、旧パスのままだと古い内容が返り続ける（エラーにならず気づきにくい）。`r8` は令和8年版で、将来（r9 等）変わりうる。
+> 変更されていないもの（2026-09-24 に鮮度を全数確認）: 予報（第2章）・概況（第3章）・気象台コメント（第7章）・地震（第9章）・津波（第10章）・潮位・地域コード `area.json`・`data.jma.go.jp` 系。
+> 条件付き取得: すべての配信先が `If-None-Match` / `If-Modified-Since` に対応（変更なしなら 304・本文 0 バイト）。定時取得は負荷が大きいので、必要なときだけ取得し、条件付き取得を使うこと。
+
+---
+
 ## 1. 共通事項
 
 ### ベースURL
@@ -193,58 +200,85 @@ GET https://www.jma.go.jp/bosai/forecast/data/overview_forecast/{area_code}.json
 
 ---
 
-## 4. 警報・注意報 API
+## 4. 警報・注意報 API（新体系: 2026-05-28〜）
 
 ```
-GET https://www.jma.go.jp/bosai/warning/data/warning/{area_code}.json
+GET https://www.jma.go.jp/bosai/warning/data/r8/{area_code}.json     # 警報・注意報（府県予報区）
+GET https://www.jma.go.jp/bosai/warning/data/r8/map_time.json         # 警報システム全体の最終更新（動作中かの判定）
+（旧: warning/data/warning/{area_code}.json ← 2026-05-28 のまま凍結。使わない）
 ```
 
-レスポンスの `areaTypes` 配下に市区町村ごとの警報情報。
-`warnings[i].code` は TELOPS コード（気象庁XML技術資料準拠）。
+**報のリスト形式**（旧は辞書）。データ種別（`dataTypeCode`）ごとの報で、**種別ごとに最新の報だけ**が現状（継続中の警報は古い報のまま残る）。
 
-主要コード:
-| コード | 名称 |
-|-------|------|
-| 3 | 大雨警報 |
-| 4 | 洪水警報 |
-| 5 | 暴風警報 |
-| 6 | 大雪警報 |
-| 10 | 大雨注意報 |
-| 14 | 雷注意報 |
-| 15 | 強風注意報 |
+| dataTypeCode | 種別 |
+|---|---|
+| VPWW55 | 大雨 |
+| VPWW56 | 土砂災害 |
+| VPWW57 | 高潮 |
+| VPWW58 | 暴風 |
+| VPWW59 | 波浪 |
+| VPWW60 | （大雪等。実データでは未確認） |
+| VPWW61 | その他の注意報（雷・濃霧・乾燥・霜） |
+
+各報のキー: `reportDatetime`・`infoType`・`publishingOffice`・`headlineText`・`notice`（特記事項。例: 千葉豪雨による暫定基準の運用）・`warning.class10Items[]` / `warning.class20Items[]`（`areaCode` と `kinds[]`）。
+`kinds[]` は `{code, status}`。`status` は 発表／継続／解除、または `{status: "発表警報・注意報はなし"}`（`code` なし）。**`code` は "03" のような2桁文字列**（int に正規化して照合する）。
+
+**警報コード（新体系のレベル付き名称）**:
+| 種類 | レベル2 注意報 | レベル3 警報 | レベル4 危険警報 | レベル5 特別警報 |
+|---|---|---|---|---|
+| 大雨 | 10 | 3 | 43 | 33 |
+| 土砂災害 | 29 | 9 | 49 | 39 |
+| 高潮 | 19 | 8 | 48 | 38 |
+
+その他: 洪水 18（注意報）・4（警報）、暴風 5、波浪 7・16、大雪 6・12、雷 14、強風 15、濃霧 20、乾燥 21、霜 24 など（従来どおり）。
+
+**鮮度の判定**: 報ごとの経過時間ではなく、`map_time.json` の `latestControlDatetime` が取得の数時間以内かで判定する（継続中の警報は古い報のままなので）。
+
+### 4-2. 時系列情報（警報等の見通し）※新規
+
+```
+GET https://www.jma.go.jp/bosai/warning_timeline/data/{area_code}.json     # 版の番号なし
+```
+
+警報・注意報に先立つ**予測情報**。**3時間ごとの明日までの見通し**を市町村単位で提供する。5時・11時・17時・23時に発表（更新）され、必要に応じて随時更新される。**時間が過ぎた区分の値は消える**。
+`timeSeries[0]`（`duration: PT3H`×12区分）の `class20Items[].kinds[].significancyParts[]`（`type`: 大雨浸水危険度・土砂災害危険度・高潮危険度・風危険度・雷危険度・波危険度 など、`locals[].codes[]`: 区分ごとのコード）。
+**コードの十の位が危険度レベル**（1=なし 2=注意 3=警戒 4=危険 5=災害切迫。例: `21` = 注意）。`forecastParts` は 1時間最大雨量・風向・最大風速・波高・潮位 などの予測値。
+実際の警報・注意報の発表状況と整合しない場合がある（予測情報のため）。
 
 ---
 
-## 5. 早期注意情報（警報級の可能性）API
+## 5. 早期注意情報（警報級の可能性）API（新体系: 2026-05-28〜）
 
 ```
-GET https://www.jma.go.jp/bosai/probability/data/probability/{area_code}.json
+GET https://www.jma.go.jp/bosai/probability/data/probability/r8/{area_code}.json
+（旧: probability/data/probability/{area_code}.json ← 2026-05-28 のまま凍結。使わない）
 ```
 
-5時間帯（今夕まで・今夜・明日昼・明日夜・明後日以降）×現象種別（大雨/暴風/波浪/高潮/大雪）の組み合わせ。
-値: `"高"` / `"中"` / `""（なし）`
+`data[0]` = 短期（**6時間ごと・明後日まで**。8区分。`timeDefineArray` の `duration: PT6H`）、`data[1]` = 週間（日ごと・4区分）。各地域に解説文 `text` を追加。
+現象種別: 短期は**大雨・土砂災害**（旧「雨」を分離）・雪・風（風雪）・波・潮位、週間は雨・雪・風（風雪）・波・潮位。値: `"高"` / `"中"` / `"なし"`（雪）/ `""`（なし・低い）。
+全国のまとめ: `probability/data/probability/r8/map.json`（約130KB）。
 
 ---
 
-## 6. 気象情報 API
+## 6. 気象情報 API（新体系: 2026-05-28〜）
 
 ```
-GET https://www.jma.go.jp/bosai/information/data/information.json  # 一覧
-GET https://www.jma.go.jp/bosai/information/data/denbun/{json_name}.json  # 個別XML電文
+GET https://www.jma.go.jp/bosai/information/data/r8/information.json           # 一覧（約1か月分・約270件）
+GET https://www.jma.go.jp/bosai/information/data/r8/denbun/{json_name}.json    # 個別電文（JSON）
+（旧: information/data/information.json・information/data/denbun/ ← 2026-05-28 のまま凍結。使わない）
 ```
 
 一覧JSONの各要素:
 | フィールド | 内容 |
 |-----------|------|
-| `controlTitle` | 情報種別（府県気象情報・地方気象情報・全般気象情報 など） |
-| `headTitle` | タイトル |
+| `controlTitle` | 情報種別（府県気象解説情報・地方気象解説情報・全般気象解説情報・府県気象防災速報・竜巻注意情報（目撃情報付き）・地方天候情報 など）。**PDF資料の項目には無い** |
+| `headTitle` | タイトル（例: 千葉県気象解説情報（大雨）） |
 | `reportDatetime` | 発表時刻 |
 | `publishingOffice` | 発表官署 |
-| `areaCode` | 対象エリアコード |
-| `jsonName` | 電文取得用キー |
-| `header` | 電文種別コード（VPFJ50=府県気象情報、VPZJ50=全般気象情報 など） |
+| `areaType` / `areaCode` / `areaCodes` | 対象（offices=府県予報区、centers=地方、japan=全国）とエリアコード |
+| `jsonName` | 電文取得用キー（`dataType` が `pdf` のものは無い） |
 
-個別電文は XML 形式。`Body/Comment/Text` に本文。
+個別電文（JSON）: `headlineText`（概要）・`commentText`（本文。**`<br>` を含む**）など。**約1か月分の履歴が取れる**ため、過去の出来事の公式な裏付けに使える。
 
 ---
 
@@ -259,12 +293,19 @@ GET https://www.jma.go.jp/bosai/forecaster_comment/data/comments/{area_code}.txt
 
 ---
 
-## 8. 台風情報 API
+## 8. 台風情報 API（新体系: 2026-05-28〜）
 
 ```
-GET https://www.jma.go.jp/bosai/information/data/typhoon.json  # 一覧
-GET https://www.jma.go.jp/bosai/information/data/typhoon/{json_name}  # 個別
+GET https://www.jma.go.jp/bosai/typhoon/data/targetTc.json                     # 発生中の台風の一覧
+GET https://www.jma.go.jp/bosai/typhoon/data/{TC番号}/specifications.json      # 諸元（実況・予報）
+GET https://www.jma.go.jp/bosai/typhoon/data/{TC番号}/forecast.json            # 予報円・暴風警戒域
+（旧: information/data/typhoon.json・information/data/typhoon/{name} ← 2026-05-27 のまま凍結。使わない）
 ```
+
+- `targetTc.json`: `[{"tropicalCyclone": "TC2632", "typhoonNumber": "2626", "category": "TS", "issue": "..."}]`（空配列 = 発生中の台風なし）。`typhoonNumber` の下2桁が台風番号（26号）。
+- `specifications.json`: `part` が `"title"`（発表時刻・台風番号・名前）と、実況（`advancedHours: 0`）・予報（12/24/45/69/93/117時間後）。各パートに `position.deg`（[緯度, 経度]）・`pressure`・`maximumWind`（sustained/gust の m/s）・`course`・`speed`・`galeWarning`/`stormWarning`（強風域・暴風域の方位別半径 km）・`probabilityCircleRadius`（予報円の半径 km）・`intensity`（強い 等）。
+- `forecast.json`: 実況の進路 `track`（`typhoon`/`preTyphoon`）と、予報の `probabilityCircle`（半径 m と接線）・`stormWarningArea`（円弧）・`validtime`。
+- 台風に関する気象解説情報（例: 「千葉県気象解説情報（台風第２５号）」）は第6章の気象情報に含まれる。
 
 ---
 
