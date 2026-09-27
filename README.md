@@ -184,3 +184,16 @@ MacのlaunchdによるmacOS自動実行ジョブ一覧（2026-06-26 現在）。
 | hatuden.deploy | `com.user.hatuden.deploy.plist` | `~/projects/ml_forecast_pages/com.user.hatuden.deploy.plist` |
 
 詳細設定・変更手順 → [pc_docs/manuals/pc-tips/launchd.md](../pc_docs/manuals/pc-tips/launchd.md)
+
+### forecast_vintage_viz.py
+
+予報の変遷（発表日の違う予報の比較）の作図部品。「発表日（run_date）ごとの予報スナップショット」を蓄積したデータから、次の3種類の図を描く。
+
+| 関数 | 内容 |
+|------|------|
+| `plot_vintages` | 発表日の違う予報（今日発表・1日前発表・2日前発表…）を同じ日付軸に重ねて、実績と比べる |
+| `plot_revision` | 起点の発表日の予報が、過去の発表からどれだけ修正されたか（差） |
+| `plot_evolution` | ある日（target_date）の予報が、発表日ごとにどう変わってきたか |
+
+データの形は `run_date`・`target_date`・`lead_time_days`・予報の値の列。使用例は `ml_forecast/daily_forecast.py` の `plot_vintage_graphs()`。
+nouken の `nouken_viz.py` に、同じ考え方を先に実装した版（GSR・SSD・最高気温向け。画像から読み取った推定値の区別表示などを含む）がある。
