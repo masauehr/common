@@ -32,6 +32,7 @@ https://www.data.jma.go.jp/
 ### エリアコード（offices）
 - 3桁（例: `130000` = 東京都、`471000` = 沖縄本島地方）
 - `area.json` の `offices` キーで検索可能
+- 北海道は8予報区（011000宗谷・012000上川留萌・013000網走北見紋別・014030十勝・014100釧路根室・015000胆振日高・016000石狩空知後志・017000渡島檜山）。`018000`/`019000` は存在しない。コード名は推測せず `area.json` と照合すること（2026-10-27、jma_mcp の `areas.py` で名前ずれを修正）
 
 ---
 
@@ -340,6 +341,8 @@ GET https://www.jma.go.jp/bosai/amedas/data/point/{stnid}/{yyyymmdd}_{h3}.json  
 観測項目例: `temp`（気温）、`humidity`（湿度）、`precipitation10m`（10分降水量）、`wind`（風速）、`windDirection`（風向）
 
 地点マスターは `amedastable.json` を参照。
+
+補助資料: 気象庁「地域気象観測所一覧」PDF（`https://www.jma.go.jp/jma/kishou/know/amedas/ame_master.pdf`、令和8年3月24日現在）。`amedastable.json` にない所在地・観測開始年月日・風速計/温度計の高さ・備考（湿度を除く等）・臨時観測所の別が載っている。表形式で機械可読ではないため、プログラムでは `amedastable.json` を使い、PDFは項目の意味や統計開始日の確認に使う。観測所番号の上2桁は都府県・振興局番号（例: 11=宗谷、91=沖縄）。
 
 ---
 
