@@ -381,16 +381,72 @@ def refresh_access_token(refresh_token):
         print('トークンのリフレッシュができませんでした。')
         raise
 
+def notify_slack(text: str) -> bool:
+    """Slack DM に通知する。Bluesky自動投稿の通知（automated-data-collector/bin/notify.py）と
+    同じ方法で、OpenClaw の Slack 接続を `openclaw message send` 経由で使う。
+    宛先は ~/.config/bsky/slack_to（1行、例: slack:Uxxxxxxxx）。環境変数 BSKY_NOTIFY_TO があれば優先。
+    通知の失敗で本処理を止めない（例外は握りつぶして False を返す）。
+    ※ OpenClaw Gateway 停止時は通知が届かない。"""
+    import os, shutil, subprocess
+    to = os.environ.get("BSKY_NOTIFY_TO", "").strip()
+    to_file = os.path.expanduser("~/.config/bsky/slack_to")
+    if not to and exists(to_file):
+        try:
+            with open(to_file, encoding="utf-8") as f:
+                to = f.read().strip()
+        except OSError:
+            pass
+    if not to:
+        print("[WARN] Slack通知先が未設定のため通知をスキップしました。")
+        return False
+    exe = shutil.which("openclaw") or "/opt/homebrew/bin/openclaw"
+    try:
+        r = subprocess.run([exe, "message", "send", "--channel", "slack", "--target", to, "-m", text[:3500]],
+                           capture_output=True, text=True, timeout=90)
+        if r.returncode != 0:
+            print("[WARN] Slack通知に失敗:", (r.stderr or r.stdout).strip()[:200])
+        return r.returncode == 0
+    except Exception as e:
+        print(f"[WARN] Slack通知で例外: {e}")
+        return False
+
+def _notify_reauth_needed(reason: str, dev: dict) -> None:
+    """再認証（デバイスコード承認）が必要になったことを Slack に通知する。
+    リトライごとの連続通知を避けるため、1時間以内に通知済みならスキップする。"""
+    import os
+    flag = join(tempfile.gettempdir(), "amd_reauth_notified")
+    try:
+        if exists(flag) and time.time() - os.path.getmtime(flag) < 3600:
+            return
+    except OSError:
+        pass
+    text = (
+        ":warning: *AMD(農研機構) の認証トークンが失効しました*\n"
+        f"原因: {reason}\n"
+        f"承認URL: {dev.get('verification_uri')}\n"
+        f"User Code: `{dev.get('user_code')}`（約5分で失効）\n"
+        "間に合わない場合は、ターミナルで手動実行して再承認してください。\n"
+        "`/opt/anaconda3/envs/met_env/bin/python ~/projects/nouken/GSR_nouken.py`"
+    )
+    if notify_slack(text):
+        try:
+            open(flag, "w").close()
+        except OSError:
+            pass
+
 def ensure_tokens() -> dict:
     tokens = load_tokens()
     if tokens and is_access_token_valid(tokens):
         return tokens
+    reason = "トークンファイルが無い、またはリフレッシュトークンがありません"
     if tokens and tokens.get("refresh_token"):
         try:
             return refresh_access_token(tokens["refresh_token"])
         except Exception as e:
             print("トークンのリフレッシュが失敗しました。:", e)
+            reason = f"リフレッシュトークンの更新に失敗（{e}）"
     dev = device_authorize()
+    _notify_reauth_needed(reason, dev)
     interval = int(dev.get("interval", 5))
     return poll_for_tokens(dev["device_code"], interval, int(dev["expires_in"]))
 
