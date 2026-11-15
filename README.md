@@ -135,6 +135,9 @@ id_to_name = {s['id']: s['name'] for s in stations}
 
 ---
 
+### jekyll/
+Jekyll でビルドして xrea（uehr.net）へ FTP 公開するための共通部品。`deploy_xrea.sh`（ビルド＋アップロード）、`deploy.sh`、`Gemfile`。`ml_forecast_pages`・`okiden_pages`・`xrea_pages` から使う。
+
 ## 参考: 天気予報APIのエリアコード早見表
 
 | エリアコード | 地域名 |
